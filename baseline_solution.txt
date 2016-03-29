@@ -1,0 +1,1 @@
+baseline_solution(11314; 80.7288423534)
