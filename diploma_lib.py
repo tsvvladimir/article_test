@@ -33,6 +33,10 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 from datetime import datetime
 import pickle
+from sklearn.svm import SVC
+from sklearn.multiclass import OneVsOneClassifier
+from sklearn.calibration import calibration_curve
+import itertools as it
 
 def diploma_res_print( volume, score):
     #print '(', volume, '; ', score * 100, ')'
