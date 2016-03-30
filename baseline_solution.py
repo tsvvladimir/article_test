@@ -13,5 +13,5 @@ def baseline_solution():
     predicted = baseline_clf.predict(twenty_test_data)
     score = f1_score(twenty_test_target, predicted, average='macro')
     print 'baseline solution:'
-    diploma_res_print(f, len(twenty_train_data), score)
+    diploma_res_print(len(twenty_train_data), score)
     f.close()

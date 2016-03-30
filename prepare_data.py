@@ -10,6 +10,7 @@ twenty_test = fetch_20newsgroups(subset='test', remove=('headers'))
 #twenty_test_data = twenty_test.data
 #twenty_test_target = twenty_test.target
 
+amount = 2000
 twenty_train_data = pickle.load( open( "twenty_train_data.txt", "rb" ) )
 twenty_train_target = pickle.load( open( "twenty_train_target.txt", "rb" ) )
 twenty_test_data = pickle.load( open( "twenty_test_data.txt", "rb" ) )

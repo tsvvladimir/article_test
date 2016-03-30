@@ -4,9 +4,9 @@ from prepare_data import *
 def active_minimum_margin():
     f = open('active_minimum_margin.txt', 'w')
     #baseline active learning solution
-    alpha = 10 #initial training set
+    alpha = 100 #initial training set
     betha = 1100 #number of iterations
-    gamma = 10 #sampling volume
+    gamma = 100 #sampling volume
 
     #create labeled and unlabeled training set
     labeled_train_data = twenty_train_data[: alpha]
@@ -36,13 +36,13 @@ def active_minimum_margin():
         #print distances.shape[0], distances.shape[1]
 
         #array with minimum distances for each document
-        maximums = []
+        minimums = []
         for doc in distances:
-            maximums.append(np.amax(doc))
+            minimums.append(np.amin(-np.fabs(np.array(doc))))
 
         #print len(minimums)
 
-        sorted_idx = np.argsort(maximums)
+        sorted_idx = np.argsort(minimums)
 
         #print sorted_idx.shape
 

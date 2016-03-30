@@ -34,9 +34,12 @@ from nltk.corpus import stopwords
 from datetime import datetime
 import pickle
 
-def diploma_res_print(f, volume, score):
+def diploma_res_print( volume, score):
+    #print '(', volume, '; ', score * 100, ')'
+    #print 'vol.append(',volume,')'
+    #print 'score.append(',score * 100,')'
     print inspect.stack()[1][3], '(', volume, '; ', score * 100, ')'
-    f.write(str(inspect.stack()[1][3]) + '(' + str(volume) + '; ' + str(score * 100)+ ')')
+    #f.write(str(inspect.stack()[1][3]) + '(' + str(volume) + '; ' + str(score * 100)+ ')')
 
 def diploma_random_sampling(dst_data, dst_target, src_data, src_target, n):
     idxes = []
