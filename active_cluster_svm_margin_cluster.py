@@ -76,13 +76,15 @@ def active_cluster_svm_margin_cluster():
     for t in range(1, betha):
         sample_numbers = np.array([])
         #to do use labeled dataset to train sigmoid
+
+        scores = baseline_active_clf.decision_function(unlabeled_train_data)
+        doc_score = {}
+        for i in range(0, len(unlabeled_train_data)):
+            last_elems = (sorted(scores[i]))[-2:]
+            doc_score[i] = np.abs(last_elems[0] - last_elems[1])
+        sorted_doc_score = sorted(doc_score.items(), key=operator.itemgetter(1))
+        print 'sorted doc score minimum active cluster svn margin cluster', sorted_doc_score[0]
         if (t % 2) == 0:
-            scores = baseline_active_clf.decision_function(unlabeled_train_data)
-            doc_score = {}
-            for i in range(0, len(unlabeled_train_data)):
-                last_elems = (sorted(scores[i]))[-2:]
-                doc_score[i] = np.abs(last_elems[0] - last_elems[1])
-            sorted_doc_score = sorted(doc_score.items(), key=operator.itemgetter(1))
             sample_numbers = np.array([]) #to add
             for i in range(0, gamma):
                 sample_numbers = np.append(sample_numbers, sorted_doc_score[i][0])

@@ -37,6 +37,7 @@ from sklearn.svm import SVC
 from sklearn.multiclass import OneVsOneClassifier
 from sklearn.calibration import calibration_curve
 import itertools as it
+from numpy import linalg as LA
 
 def diploma_res_print( volume, score):
     #print '(', volume, '; ', score * 100, ')'

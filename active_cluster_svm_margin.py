@@ -77,13 +77,78 @@ def active_cluster_svm_margin():
         #to do use labeled dataset to train sigmoid
 
         scores = baseline_active_clf.decision_function(unlabeled_train_data)
+
+        #count p1 p2 p3 p4
+
+        def count_p(arr):
+            p1 = arr.min()
+            p4 = arr.max()
+            sorted_arr = sorted(arr)
+            a1 = [i for i in sorted_arr if i < 0]
+            a2 = [i for i in sorted_arr if i > 0]
+            p2 = -100500
+            p3 = +100500
+            if len(a1) > 0:
+                p2 = max(a1)
+            if len(a2) > 0:
+                p3 = min(a2)
+            return [p1, p2, p3, p4]
+
+        #prom_arr = []
+
+        norm_scores = LA.norm(scores)
+        n_scores = np.divide(scores, norm_scores)
+
+        '''
+        plus_norm = 0
+        min_norm = 0
+        for line in scores:
+            for elem in line:
+                if (elem > 0):
+                    plus_norm += elem ** 2
+                else:
+                    min_norm += elem ** 2
+        plus_norm = math.sqrt(plus_norm)
+        min_norm = math.sqrt(min_norm)
+        n_scores = np.array(scores)
+        for i in range(0, len(n_scores)):
+            for j in range(0, len(n_scores[i])):
+                if (n_scores[i][j] > 0):
+                    n_scores[i][j] = n_scores[i][j] / plus_norm
+                else:
+                    n_scores[i][j] = n_scores[i][j] / min_norm
+        '''
+
+        #print n_scores
+        prom_arr = []
+        for lin in range(0, len(n_scores)):
+            prom_arr.append(count_p(n_scores[lin]))
+
+        t_prom_arr = np.transpose(np.array(prom_arr))
+        #print t_prom_arr
+        p1 = np.amin(t_prom_arr[0])
+        p2 = np.amax(t_prom_arr[1])
+        p3 = np.amin(t_prom_arr[2])
+        p4 = np.amax(t_prom_arr[3])
+        print 'p1:', p1, 'p2:', p2, 'p3:', p3, 'p4:', p4
+
+
+        prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(scores), -1))))
+        print 'min proba:', np.amin(prob), 'max proba:', np.amax(prob)
+
+        prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(scores), -1))))
+        print 'norm matrix min proba:', np.amin(prob), 'norm matrix max proba:', np.amax(prob)
+
         doc_score = {}
         for i in range(0, len(unlabeled_train_data)):
             last_elems = (sorted(scores[i]))[-2:]
             doc_score[i] = np.abs(last_elems[0] - last_elems[1])
 
         sorted_doc_score = sorted(doc_score.items(), key=operator.itemgetter(1))
-        print 'sorted doc score minimum', sorted_doc_score[0]
+
+
+        #print 'sorted doc score minimum active cluster svm margin', sorted_doc_score[0]
+
         sample_numbers = np.array([])
         for i in range(0, gamma):
             sample_numbers = np.append(sample_numbers, sorted_doc_score[i][0])
