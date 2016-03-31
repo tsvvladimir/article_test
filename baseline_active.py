@@ -1,7 +1,14 @@
 from diploma_lib import *
 from prepare_data import *
+import prepare_data
 
-def baseline_active(foldname, twenty_train_data, twenty_train_target, twenty_test_data, twenty_test_target):
+def baseline_active(foldname):
+
+    twenty_train_data = getattr(prepare_data, foldname + '_train_data')
+    twenty_train_target = getattr(prepare_data, foldname + '_train_target')
+    twenty_test_data = getattr(prepare_data, foldname + '_test_data')
+    twenty_test_target = getattr(prepare_data, foldname + '_test_target')
+
     #f = open('baseline_active.txt', 'w')
     #baseline active learning solution
     alpha = 20 #initial training set
