@@ -44,6 +44,11 @@ fold2_test_data = twenty_train_data[2829:5658]
 fold2_train_target = np.concatenate((twenty_train_target[0:2829], twenty_train_target[5658:11314]), axis=0)
 fold2_test_target = twenty_train_target[2829:5658]
 
+pickle.dump( fold2_train_data, open( "fold2_train_data.txt", "wb" ) )
+pickle.dump( fold2_test_data, open( "fold2_test_data", "wb" ) )
+pickle.dump( fold2_train_target, open( "fold2_train_target", "wb" ) )
+pickle.dump( fold2_test_target, open( "fold2_test_target", "wb" ) )
+
 
 fold3_train_data = np.concatenate((twenty_train_data[0:5658], twenty_train_data[8486:11314]), axis=0)
 fold3_test_data = twenty_train_data[5658:8486]

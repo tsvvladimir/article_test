@@ -2,6 +2,13 @@ from diploma_lib import *
 from prepare_data import *
 
 def baseline_solution(foldname, twenty_train_data, twenty_train_target, twenty_test_data, twenty_test_target):
+
+    twenty_train_data = pickle.load( open( twenty_train_data, "rb" ) )
+    twenty_train_target = pickle.load( open( twenty_train_target, "rb" ) )
+    twenty_test_data = pickle.load( open( twenty_test_data, "rb" ) )
+    twenty_test_target = pickle.load( open( twenty_test_target, "rb" ) )
+
+
     #f = open('baseline_solution.txt', 'w')
     #baseline solution
     baseline_clf = Pipeline([
