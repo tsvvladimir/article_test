@@ -1,13 +1,19 @@
 from diploma_lib import *
 from prepare_data import *
+import prepare_data
 
-def baseline_solution(foldname, twenty_train_data, twenty_train_target, twenty_test_data, twenty_test_target):
-
+def baseline_solution(foldname):
+    '''
     twenty_train_data = pickle.load( open( twenty_train_data, "rb" ) )
     twenty_train_target = pickle.load( open( twenty_train_target, "rb" ) )
     twenty_test_data = pickle.load( open( twenty_test_data, "rb" ) )
     twenty_test_target = pickle.load( open( twenty_test_target, "rb" ) )
+    '''
 
+    twenty_train_data = getattr(prepare_data, foldname + '_train_data')
+    twenty_train_target = getattr(prepare_data, foldname + '_train_target')
+    twenty_test_data = getattr(prepare_data, foldname + '_test_data')
+    twenty_test_target = getattr(prepare_data, foldname + '_test_target')
 
     #f = open('baseline_solution.txt', 'w')
     #baseline solution
