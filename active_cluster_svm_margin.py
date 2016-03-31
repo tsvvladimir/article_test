@@ -2,12 +2,19 @@
 
 from diploma_lib import *
 from prepare_data import *
+import prepare_data
 from sklearn.cluster import AgglomerativeClustering
 from collections import OrderedDict
 from collections import defaultdict
 from sklearn.metrics import pairwise_distances_argmin_min
 
-def active_cluster_svm_margin(foldname, twenty_train_data, twenty_train_target, twenty_test_data, twenty_test_target):
+def active_cluster_svm_margin(foldname):
+
+    twenty_train_data = getattr(prepare_data, foldname + '_train_data')
+    twenty_train_target = getattr(prepare_data, foldname + '_train_target')
+    twenty_test_data = getattr(prepare_data, foldname + '_test_data')
+    twenty_test_target = getattr(prepare_data, foldname + '_test_target')
+
     #baseline active learning solution
     alpha = 20 #initial training set
     betha = int(len(twenty_train_data) / alpha) - 2 #number of iterations

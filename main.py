@@ -27,10 +27,13 @@ if __name__ == '__main__':
         #procs.append(Process(target=baseline_solution.baseline_solution, args=("fold3", )))
         #procs.append(Process(target=baseline_solution.baseline_solution, args=("fold4", )))
 
+        procs.append(Process(target=baseline_solution.baseline_solution, args=("fold1", )))
         procs.append(Process(target=baseline_active.baseline_active, args=("fold1", )))
-        procs.append(Process(target=baseline_active.baseline_active, args=("fold2", )))
-        procs.append(Process(target=baseline_active.baseline_active, args=("fold3", )))
-        procs.append(Process(target=baseline_active.baseline_active, args=("fold4", )))
+        procs.append(Process(target=active_cluster_svm_margin.active_cluster_svm_margin, args=("fold1", )))
+
+        #procs.append(Process(target=baseline_active.baseline_active, args=("fold2", )))
+        #procs.append(Process(target=baseline_active.baseline_active, args=("fold3", )))
+        #procs.append(Process(target=baseline_active.baseline_active, args=("fold4", )))
 
 
         #procs.append(Process(target=baseline_solution.baseline_solution, args=("fold3", prepare_data.fold3_train_data, prepare_data.fold3_train_target, prepare_data.fold3_test_data, prepare_data.fold3_test_target)))
