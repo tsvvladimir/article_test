@@ -1,18 +1,31 @@
+#clusterize in 20 clusters and choose cluster center for init learning
+
 from diploma_lib import *
 from prepare_data import *
+import prepare_data
+from sklearn.cluster import AgglomerativeClustering
+from collections import OrderedDict
+from collections import defaultdict
+from sklearn.metrics import pairwise_distances_argmin_min
 
-def active_minimum_margin():
-    f = open('active_minimum_margin.txt', 'w')
+def active_cluster_svm_margin(foldname):
+
+    twenty_train_data = getattr(prepare_data, foldname + '_train_data')
+    twenty_train_target = getattr(prepare_data, foldname + '_train_target')
+    twenty_test_data = getattr(prepare_data, foldname + '_test_data')
+    twenty_test_target = getattr(prepare_data, foldname + '_test_target')
+
     #baseline active learning solution
-    alpha = 100 #initial training set
-    betha = 1100 #number of iterations
-    gamma = 100 #sampling volume
+    alpha = 20 #initial training set
+    betha = int(len(twenty_train_data) / alpha) - 2 #number of iterations
+    gamma = 20 #sampling volume
 
-    #create labeled and unlabeled training set
+
     labeled_train_data = twenty_train_data[: alpha]
     labeled_train_target = twenty_train_target[: alpha]
     unlabeled_train_data = twenty_train_data[alpha:]
     unlabeled_train_target = twenty_train_target[alpha:]
+
 
     baseline_active_clf = Pipeline([
         ('vect', CountVectorizer()),
@@ -23,41 +36,103 @@ def active_minimum_margin():
     baseline_active_clf.fit(labeled_train_data, labeled_train_target)
     predicted = baseline_active_clf.predict(twenty_test_data)
     score = f1_score(twenty_test_target, predicted, average='macro')
-    print 'baseline active learning solution add with least distance'
-    diploma_res_print(f, len(labeled_train_data), score)
+    #print 'active cluster svm margin solution'
+    scores = baseline_active_clf.decision_function(unlabeled_train_data)
+    prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(scores), -1))))
+    diploma_res_print(foldname, len(labeled_train_data), score, np.amax(prob))
     for t in range(1, betha):
-        take_idx = []
+        #to do use labeled dataset to train sigmoid
 
-        #fit classifier on unlabeled data and take gamma with least decision function
+        #f1 for labeled set
+        #pred_lab = baseline_active_clf.predict(labeled_train_data)
+        #print 'f1 score for labeled:', f1_score(labeled_train_target, pred_lab, average='macro')
 
-        distances = baseline_active_clf.decision_function(unlabeled_train_data)
 
-        #print 'distances shape'
-        #print distances.shape[0], distances.shape[1]
 
-        #array with minimum distances for each document
-        minimums = []
-        for doc in distances:
-            minimums.append(np.amin(-np.fabs(np.array(doc))))
 
-        #print len(minimums)
+        #count p1 p2 p3 p4
+        '''
+        def count_p(arr):
+            p1 = arr.min()
+            p4 = arr.max()
+            sorted_arr = sorted(arr)
+            a1 = [i for i in sorted_arr if i < 0]
+            a2 = [i for i in sorted_arr if i > 0]
+            p2 = -100500
+            p3 = +100500
+            if len(a1) > 0:
+                p2 = max(a1)
+            if len(a2) > 0:
+                p3 = min(a2)
+            return [p1, p2, p3, p4]
 
-        sorted_idx = np.argsort(minimums)
+        #prom_arr = []
 
-        #print sorted_idx.shape
+        norm_scores = LA.norm(scores)
+        n_scores = np.divide(scores, norm_scores)
 
+        '''
+        '''
+        plus_norm = 0
+        min_norm = 0
+        for line in scores:
+            for elem in line:
+                if (elem > 0):
+                    plus_norm += elem ** 2
+                else:
+                    min_norm += elem ** 2
+        plus_norm = math.sqrt(plus_norm)
+        min_norm = math.sqrt(min_norm)
+        n_scores = np.array(scores)
+        for i in range(0, len(n_scores)):
+            for j in range(0, len(n_scores[i])):
+                if (n_scores[i][j] > 0):
+                    n_scores[i][j] = n_scores[i][j] / plus_norm
+                else:
+                    n_scores[i][j] = n_scores[i][j] / min_norm
+        '''
+        '''
+        #print n_scores
+        prom_arr = []
+        for lin in range(0, len(n_scores)):
+            prom_arr.append(count_p(n_scores[lin]))
+
+        t_prom_arr = np.transpose(np.array(prom_arr))
+        #print t_prom_arr
+        #p1 = np.amin(t_prom_arr[0])
+        #p2 = np.amax(t_prom_arr[1])
+        #p3 = np.amin(t_prom_arr[2])
+        #p4 = np.amax(t_prom_arr[3])
+        #print 'p1:', p1, 'p2:', p2, 'p3:', p3, 'p4:', p4
+        '''
+
+
+
+        #prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(n_scores), -1))))
+        #print 'norm matrix min proba:', np.amin(prob), 'norm matrix max proba:', np.amax(prob)
+
+        doc_score = {}
+        for i in range(0, len(unlabeled_train_data)):
+            last_elems = (sorted(scores[i]))[-2:]
+            doc_score[i] = np.abs(last_elems[0] - last_elems[1])
+
+        sorted_doc_score = sorted(doc_score.items(), key=operator.itemgetter(1))
+
+
+        #print 'sorted doc score minimum active cluster svm margin', sorted_doc_score[0]
+
+        sample_numbers = np.array([])
         for i in range(0, gamma):
-            take_idx.append(sorted_idx[0])
-            sorted_idx = np.delete(sorted_idx, 0)
+            sample_numbers = np.append(sample_numbers, sorted_doc_score[i][0])
 
-        #print 'start range sampling'
-        #print len(unlabeled_train_data)
-        labeled_train_data, labeled_train_target, unlabeled_train_data, unlabeled_train_target = diploma_range_sampling(labeled_train_data, labeled_train_target, unlabeled_train_data, unlabeled_train_target, take_idx)
-        #print 'start fit'
+        labeled_train_data, labeled_train_target, unlabeled_train_data, unlabeled_train_target = diploma_range_sampling(labeled_train_data, labeled_train_target, unlabeled_train_data, unlabeled_train_target, sample_numbers)
         baseline_active_clf.fit(labeled_train_data, labeled_train_target)
-        #print 'start predict'
         predicted = baseline_active_clf.predict(twenty_test_data)
-        #print 'count score'
         score = f1_score(twenty_test_target, predicted, average='macro')
-        diploma_res_print(f, len(labeled_train_data), score)
-    f.close()
+
+        scores = baseline_active_clf.decision_function(unlabeled_train_data)
+        prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(scores), -1))))
+        #print 'min proba:', np.amin(prob), 'max proba:', np.amax(prob)
+
+
+        diploma_res_print(foldname, len(labeled_train_data), score, np.amax(prob))
