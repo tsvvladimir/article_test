@@ -76,6 +76,11 @@ def active_cluster_svm_margin():
     for t in range(1, betha):
         #to do use labeled dataset to train sigmoid
 
+        #f1 for labeled set
+        #pred_lab = baseline_active_clf.predict(labeled_train_data)
+        #print 'f1 score for labeled:', f1_score(labeled_train_target, pred_lab, average='macro')
+
+
         scores = baseline_active_clf.decision_function(unlabeled_train_data)
 
         #count p1 p2 p3 p4
@@ -136,7 +141,7 @@ def active_cluster_svm_margin():
         prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(scores), -1))))
         print 'min proba:', np.amin(prob), 'max proba:', np.amax(prob)
 
-        prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(scores), -1))))
+        prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(n_scores), -1))))
         print 'norm matrix min proba:', np.amin(prob), 'norm matrix max proba:', np.amax(prob)
 
         doc_score = {}
