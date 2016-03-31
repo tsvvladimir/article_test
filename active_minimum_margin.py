@@ -8,7 +8,7 @@ from collections import OrderedDict
 from collections import defaultdict
 from sklearn.metrics import pairwise_distances_argmin_min
 
-def active_cluster_svm_margin(foldname):
+def active_minimum_margin(foldname):
 
     twenty_train_data = getattr(prepare_data, foldname + '_train_data')
     twenty_train_target = getattr(prepare_data, foldname + '_train_target')
@@ -121,9 +121,9 @@ def active_cluster_svm_margin(foldname):
 
         #print 'sorted doc score minimum active cluster svm margin', sorted_doc_score[0]
 
-        sample_numbers = np.array([])
+        sample_numbers = []
         for i in range(0, gamma):
-            sample_numbers = np.append(sample_numbers, sorted_doc_score[i][0])
+            sample_numbers = sample_numbers + [sorted_doc_score[i][0]]
 
         labeled_train_data, labeled_train_target, unlabeled_train_data, unlabeled_train_target = diploma_range_sampling(labeled_train_data, labeled_train_target, unlabeled_train_data, unlabeled_train_target, sample_numbers)
         baseline_active_clf.fit(labeled_train_data, labeled_train_target)
