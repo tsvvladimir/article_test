@@ -32,7 +32,30 @@ twenty_train_target = pickle.load( open( "twenty_train_target.txt", "rb" ) )
 twenty_test_data = pickle.load( open( "twenty_test_data.txt", "rb" ) )
 twenty_test_target = pickle.load( open( "twenty_test_target.txt", "rb" ) )
 
-print type(twenty_test_data)
+fold1_train_data = twenty_train_data[2829:11314]
+fold1_test_data = twenty_train_data[0:2829]
+fold1_train_target = twenty_train_target[2829:11314]
+fold1_test_target = twenty_train_target[0:2829]
+
+#print fold1_train_data
+
+fold2_train_data = np.concatenate((twenty_train_data[0:2829], twenty_train_data[5658:11314]), axis=0)
+fold2_test_data = twenty_train_data[2829:5658]
+fold2_train_target = np.concatenate((twenty_train_target[0:2829], twenty_train_target[5658:11314]), axis=0)
+fold2_test_target = twenty_train_target[2829:5658]
+
+
+fold3_train_data = np.concatenate((twenty_train_data[0:5658], twenty_train_data[8486:11314]), axis=0)
+fold3_test_data = twenty_train_data[5658:8486]
+fold3_train_target = np.concatenate((twenty_train_target[0:5658], twenty_train_target[8486:11314]), axis=0)
+fold3_test_target = twenty_train_target[5658:8486]
+
+fold4_train_data = twenty_train_data[0:8486]
+fold4_test_data = twenty_train_data[8486:11314]
+fold4_train_target = twenty_train_target[0:8486]
+fold4_test_target = twenty_train_target[8486:11314]
+
+#print type(twenty_test_data)
 
 '''
 from sklearn.cross_validation import KFold

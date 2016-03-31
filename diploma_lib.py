@@ -39,11 +39,14 @@ from sklearn.calibration import calibration_curve
 import itertools as it
 from numpy import linalg as LA
 
-def diploma_res_print( volume, score):
+def diploma_res_print(foldname, volume, score, par=None):
     #print '(', volume, '; ', score * 100, ')'
     #print 'vol.append(',volume,')'
     #print 'score.append(',score * 100,')'
-    print inspect.stack()[1][3], '(', volume, '; ', score * 100, ')'
+    if par == None:
+        print (inspect.stack()[1][3] + '_' + foldname), volume, '; ', score
+    else:
+        print (inspect.stack()[1][3] + '_' + foldname), volume, '; ', score, ';', par
     #f.write(str(inspect.stack()[1][3]) + '(' + str(volume) + '; ' + str(score * 100)+ ')')
 
 def diploma_random_sampling(dst_data, dst_target, src_data, src_target, n):

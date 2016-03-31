@@ -7,10 +7,10 @@ from collections import OrderedDict
 from collections import defaultdict
 from sklearn.metrics import pairwise_distances_argmin_min
 
-def active_cluster_svm_margin():
+def active_cluster_svm_margin(foldname, twenty_train_data, twenty_train_target, twenty_test_data, twenty_test_target):
     #baseline active learning solution
     alpha = 20 #initial training set
-    betha = 600 #number of iterations
+    betha = int(len(twenty_train_data) / alpha) - 2 #number of iterations
     gamma = 20 #sampling volume
 
     tfidf_transformer = Pipeline([
@@ -25,21 +25,21 @@ def active_cluster_svm_margin():
     unlabeled_train_data = twenty_train_data
     unlabeled_train_target = twenty_train_target
 
-    print 'start transforming'
+    #print 'start transforming'
     unlabeled_matrix = tfidf_transformer.fit_transform(unlabeled_train_data)
 
-    print 'start fitting'
-    print datetime.now()
+    #print 'start fitting'
+    #print datetime.now()
     res = cluster.fit_predict(unlabeled_matrix)
-    print datetime.now()
+    #print datetime.now()
 
-    print 'clustering result'
-    print OrderedDict(Counter(res))
-    print res.shape
+    #print 'clustering result'
+    #print OrderedDict(Counter(res))
+    #print res.shape
 
     closest, _ = pairwise_distances_argmin_min(cluster.cluster_centers_, unlabeled_matrix, metric='cosine')
 
-    print closest
+    #print closest
 
     '''
     results = defaultdict(list)
@@ -61,7 +61,7 @@ def active_cluster_svm_margin():
     labeled_train_data = []
     labeled_train_target = []
     labeled_train_data, labeled_train_target, unlabeled_train_data, unlabeled_train_target = diploma_range_sampling(labeled_train_data, labeled_train_target, unlabeled_train_data, unlabeled_train_target, closest)
-    print labeled_train_data.shape
+    #print labeled_train_data.shape
     baseline_active_clf = Pipeline([
         ('vect', CountVectorizer()),
         ('tfidf', TfidfTransformer()),
@@ -71,8 +71,10 @@ def active_cluster_svm_margin():
     baseline_active_clf.fit(labeled_train_data, labeled_train_target)
     predicted = baseline_active_clf.predict(twenty_test_data)
     score = f1_score(twenty_test_target, predicted, average='macro')
-    print 'active cluster svm margin solution'
-    diploma_res_print(len(labeled_train_data), score)
+    #print 'active cluster svm margin solution'
+    scores = baseline_active_clf.decision_function(unlabeled_train_data)
+    prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(scores), -1))))
+    diploma_res_print(foldname, len(labeled_train_data), score, np.amax(prob))
     for t in range(1, betha):
         #to do use labeled dataset to train sigmoid
 
@@ -81,10 +83,10 @@ def active_cluster_svm_margin():
         #print 'f1 score for labeled:', f1_score(labeled_train_target, pred_lab, average='macro')
 
 
-        scores = baseline_active_clf.decision_function(unlabeled_train_data)
+
 
         #count p1 p2 p3 p4
-
+        '''
         def count_p(arr):
             p1 = arr.min()
             p4 = arr.max()
@@ -105,6 +107,7 @@ def active_cluster_svm_margin():
         n_scores = np.divide(scores, norm_scores)
 
         '''
+        '''
         plus_norm = 0
         min_norm = 0
         for line in scores:
@@ -123,7 +126,7 @@ def active_cluster_svm_margin():
                 else:
                     n_scores[i][j] = n_scores[i][j] / min_norm
         '''
-
+        '''
         #print n_scores
         prom_arr = []
         for lin in range(0, len(n_scores)):
@@ -131,18 +134,17 @@ def active_cluster_svm_margin():
 
         t_prom_arr = np.transpose(np.array(prom_arr))
         #print t_prom_arr
-        p1 = np.amin(t_prom_arr[0])
-        p2 = np.amax(t_prom_arr[1])
-        p3 = np.amin(t_prom_arr[2])
-        p4 = np.amax(t_prom_arr[3])
-        print 'p1:', p1, 'p2:', p2, 'p3:', p3, 'p4:', p4
+        #p1 = np.amin(t_prom_arr[0])
+        #p2 = np.amax(t_prom_arr[1])
+        #p3 = np.amin(t_prom_arr[2])
+        #p4 = np.amax(t_prom_arr[3])
+        #print 'p1:', p1, 'p2:', p2, 'p3:', p3, 'p4:', p4
+        '''
 
 
-        prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(scores), -1))))
-        print 'min proba:', np.amin(prob), 'max proba:', np.amax(prob)
 
-        prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(n_scores), -1))))
-        print 'norm matrix min proba:', np.amin(prob), 'norm matrix max proba:', np.amax(prob)
+        #prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(n_scores), -1))))
+        #print 'norm matrix min proba:', np.amin(prob), 'norm matrix max proba:', np.amax(prob)
 
         doc_score = {}
         for i in range(0, len(unlabeled_train_data)):
@@ -162,4 +164,10 @@ def active_cluster_svm_margin():
         baseline_active_clf.fit(labeled_train_data, labeled_train_target)
         predicted = baseline_active_clf.predict(twenty_test_data)
         score = f1_score(twenty_test_target, predicted, average='macro')
-        diploma_res_print(len(labeled_train_data), score)
+
+        scores = baseline_active_clf.decision_function(unlabeled_train_data)
+        prob = np.divide(1, np.add(1, np.exp(np.multiply(np.array(scores), -1))))
+        #print 'min proba:', np.amin(prob), 'max proba:', np.amax(prob)
+
+
+        diploma_res_print(foldname, len(labeled_train_data), score, np.amax(prob))
