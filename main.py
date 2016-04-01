@@ -5,6 +5,7 @@ import active_init_1
 import active_minimum_margin
 import active_cluster_svm_margin
 import active_cluster_svm_margin_cluster
+import active_minimum_margin_degr
 from multiprocessing import Process
 
 if __name__ == '__main__':
@@ -18,6 +19,7 @@ if __name__ == '__main__':
     #baseline_solution.baseline_solution("fold1", prepare_data.fold1_train_data, prepare_data.fold1_train_target, prepare_data.fold1_test_data, prepare_data.fold1_test_target)
     #active_cluster_svm_margin.active_cluster_svm_margin("fold1", prepare_data.fold1_train_data, prepare_data.fold1_train_target, prepare_data.fold1_test_data, prepare_data.fold1_test_target)
 
+
     if __name__ == '__main__':
         procs = []
         #procs.append(Process(target=baseline_solution.baseline_solution, args=("fold1", prepare_data.fold1_train_data, prepare_data.fold1_train_target, prepare_data.fold1_test_data, prepare_data.fold1_test_target)))
@@ -28,10 +30,16 @@ if __name__ == '__main__':
         #procs.append(Process(target=baseline_solution.baseline_solution, args=("fold4", )))
 
         #for article
-        #procs.append(Process(target=baseline_solution.baseline_solution, args=("fold1", )))
-        procs.append(Process(target=baseline_active.baseline_active, args=("fold1", )))
-        procs.append(Process(target=active_minimum_margin.active_minimum_margin, args=("fold1", )))
-        #procs.append(Process(target=active_cluster_svm_margin.active_cluster_svm_margin, args=("fold1", )))
+
+        #procs.append(Process(target=baseline_solution.baseline_solution, args=("fold4", )))
+        #procs.append(Process(target=baseline_active.baseline_active, args=("fold4", )))
+        #procs.append(Process(target=active_minimum_margin_degr.active_minimum_margin_degr, args=("fold4",)))
+        #procs.append(Process(target=active_minimum_margin.active_minimum_margin, args=("fold4", )))
+        #procs.append(Process(target=active_cluster_svm_margin.active_cluster_svm_margin, args=("fold4", )))
+
+        procs.append(Process(target=baseline_solution.baseline_solution, args=("twenty",)))
+        procs.append(Process(target=active_cluster_svm_margin.active_cluster_svm_margin, args=("twenty",)))
+
 
         #procs.append(Process(target=baseline_active.baseline_active, args=("fold2", )))
         #procs.append(Process(target=baseline_active.baseline_active, args=("fold3", )))

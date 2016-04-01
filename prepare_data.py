@@ -32,6 +32,9 @@ twenty_train_target = pickle.load( open( "twenty_train_target.txt", "rb" ) )
 twenty_test_data = pickle.load( open( "twenty_test_data.txt", "rb" ) )
 twenty_test_target = pickle.load( open( "twenty_test_target.txt", "rb" ) )
 
+print len(twenty_train_data)
+print len(twenty_test_data)
+
 
 
 fold1_train_data = twenty_train_data[2829:11314]
@@ -56,6 +59,8 @@ fold4_train_data = twenty_train_data[0:8486]
 fold4_test_data = twenty_train_data[8486:11314]
 fold4_train_target = twenty_train_target[0:8486]
 fold4_test_target = twenty_train_target[8486:11314]
+
+#print fold4_test_target
 
 #print type(twenty_test_data)
 

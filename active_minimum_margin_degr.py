@@ -1,3 +1,4 @@
+
 #clusterize in 20 clusters and choose cluster center for init learning
 
 from diploma_lib import *
@@ -8,7 +9,7 @@ from collections import OrderedDict
 from collections import defaultdict
 from sklearn.metrics import pairwise_distances_argmin_min
 
-def active_minimum_margin(foldname):
+def active_minimum_margin_degr(foldname):
 
     twenty_train_data = getattr(prepare_data, foldname + '_train_data')
     twenty_train_target = getattr(prepare_data, foldname + '_train_target')
@@ -21,10 +22,23 @@ def active_minimum_margin(foldname):
     gamma = 20 #sampling volume
 
 
-    labeled_train_data = twenty_train_data[: alpha]
-    labeled_train_target = twenty_train_target[: alpha]
-    unlabeled_train_data = twenty_train_data[alpha:]
-    unlabeled_train_target = twenty_train_target[alpha:]
+    #create bag train set
+    samples = []
+    k = 0
+    for i, cl in enumerate(twenty_train_target):
+        if cl < 3:
+            samples.append(i)
+            k += 1
+            if k > (alpha - 1):
+                break
+
+    labeled_train_data = []
+    labeled_train_target = []
+    #unlabeled_train_data = []
+    #unlabeled_train_target = []
+    labeled_train_data, labeled_train_target, unlabeled_train_data, unlabeled_train_target = diploma_range_sampling(labeled_train_data, labeled_train_target, twenty_train_data, twenty_train_target, samples)
+
+
 
 
     baseline_active_clf = Pipeline([
