@@ -20,9 +20,6 @@ if __name__ == '__main__':
     #active_cluster_svm_margin.active_cluster_svm_margin("fold1", prepare_data.fold1_train_data, prepare_data.fold1_train_target, prepare_data.fold1_test_data, prepare_data.fold1_test_target)
 
 
-    active_minimum_margin_degr.active_minimum_margin_degr('fold4')
-
-    '''
     if __name__ == '__main__':
         procs = []
         #procs.append(Process(target=baseline_solution.baseline_solution, args=("fold1", prepare_data.fold1_train_data, prepare_data.fold1_train_target, prepare_data.fold1_test_data, prepare_data.fold1_test_target)))
@@ -40,8 +37,8 @@ if __name__ == '__main__':
         #procs.append(Process(target=active_minimum_margin.active_minimum_margin, args=("fold4", )))
         #procs.append(Process(target=active_cluster_svm_margin.active_cluster_svm_margin, args=("fold4", )))
 
-        procs.append(Process(target=active_minimum_margin_degr.active_minimum_margin_degr, args=("fold4",)))
-        procs.append(Process(target=active_cluster_svm_margin.active_cluster_svm_margin, args=("fold4",)))
+        procs.append(Process(target=baseline_solution.baseline_solution, args=("twenty",)))
+        procs.append(Process(target=active_cluster_svm_margin.active_cluster_svm_margin, args=("twenty",)))
 
 
         #procs.append(Process(target=baseline_active.baseline_active, args=("fold2", )))
@@ -55,8 +52,6 @@ if __name__ == '__main__':
         #   x.start()
         map(lambda x: x.start(), procs)
         map(lambda x: x.join(), procs)
-
-    '''
 
     #active_cluster_svm_margin_cluster.active_cluster_svm_margin_cluster()
 
