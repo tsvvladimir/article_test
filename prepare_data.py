@@ -20,20 +20,23 @@ for cat in newsgroups_test_cats:
     print 'cat:', cat, 'length:', len(fetch_20newsgroups(subset='test', categories=[cat]).data)
 
 '''
+twenty_train = fetch_20newsgroups(subset='train', remove=('headers'))
+twenty_test = fetch_20newsgroups(subset='test', remove=('headers'))
 #set up train and test datasets
 #twenty_train_data = twenty_train.data
 #twenty_train_target = twenty_train.target
 #twenty_test_data = twenty_test.data
 #twenty_test_target = twenty_test.target
-
+pickle.dump(twenty_train.target, open('twenty_train_target.txt', 'wb'))
+pickle.dump(twenty_test.target, open('twenty_test_target.txt', 'wb'))
 #amount = 2000
 twenty_train_data = pickle.load( open( "twenty_train_data.txt", "rb" ) )
 twenty_train_target = pickle.load( open( "twenty_train_target.txt", "rb" ) )
 twenty_test_data = pickle.load( open( "twenty_test_data.txt", "rb" ) )
 twenty_test_target = pickle.load( open( "twenty_test_target.txt", "rb" ) )
 
-print len(twenty_train_data)
-print len(twenty_test_data)
+#print len(twenty_train_data)
+#print len(twenty_test_data)
 
 
 

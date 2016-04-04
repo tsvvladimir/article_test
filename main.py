@@ -37,8 +37,8 @@ if __name__ == '__main__':
         #procs.append(Process(target=active_minimum_margin.active_minimum_margin, args=("fold4", )))
         #procs.append(Process(target=active_cluster_svm_margin.active_cluster_svm_margin, args=("fold4", )))
 
-        procs.append(Process(target=baseline_solution.baseline_solution, args=("twenty",)))
-        procs.append(Process(target=active_cluster_svm_margin.active_cluster_svm_margin, args=("twenty",)))
+        procs.append(Process(target=active_minimum_margin_degr.active_minimum_margin_degr, args=("twenty",)))
+        procs.append(Process(target=active_minimum_margin.active_minimum_margin, args=("twenty",)))
 
 
         #procs.append(Process(target=baseline_active.baseline_active, args=("fold2", )))

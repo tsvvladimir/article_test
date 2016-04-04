@@ -8,6 +8,7 @@ from sklearn.cluster import AgglomerativeClustering
 from collections import OrderedDict
 from collections import defaultdict
 from sklearn.metrics import pairwise_distances_argmin_min
+from sklearn.metrics.pairwise import pairwise_distances
 
 def active_minimum_margin_degr(foldname):
 
@@ -22,9 +23,34 @@ def active_minimum_margin_degr(foldname):
     gamma = 20 #sampling volume
 
 
-    #create bag train set
+    #create bad train set
+    '''
+    tfidf_transformer = Pipeline([
+        ('vect', CountVectorizer()),
+        ('tfidf', TfidfTransformer())
+    ])
+
+    unlabeled_matrix = tfidf_transformer.fit_transform(twenty_train_data)
+    res = pairwise_distances(unlabeled_matrix)
+    #print res.shape
+    #print res
+    print 'dict start'
+    d = {}
+    for i in range(0, 11314):
+        for j in range(i, 11314):
+            d[(i, j)] = res[i][j]
+    #print d
+
+    print 'sort start'
+    sort = sorted(d.items(), key=operator.itemgetter(1))
+    for i in range(0, 10):
+        print sort[i], twenty_train_target[i], twenty_train_target[j]
+    exit()
+    '''
     samples = []
-    k = 0
+    samples = [8792, 8792,1778, 1778, 2488, 2488, 7951, 7951, 9445, 9445, 6837, 10132, 313, 313, 5480, 5480, 1455, 1455, 5487, 5487]
+    '''
+k = 0
     for i, cl in enumerate(twenty_train_target):
         if cl < 3:
             samples.append(i)
@@ -32,6 +58,7 @@ def active_minimum_margin_degr(foldname):
             if k > (alpha - 1):
                 break
 
+    '''
     labeled_train_data = []
     labeled_train_target = []
     #unlabeled_train_data = []
